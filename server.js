@@ -1,18 +1,24 @@
 const express = require("express");
 const axios = require("axios");
 const app = express();
+const path = require('path');
 
 require('dotenv').config();
 
 // Set the view engine to EJS
-app.set("view engine", "ejs");
+// Serv e static assets from the public folder
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Serve the public folder as static files
-app.use(express.static("public"));
+// Set the views directory for rendering
+app.set('views', path.join(__dirname, 'views'));
 
-// Render the index template with default values for weather and error
-app.get("/", (req, res) => {
-  res.render("index", { weather: null, error: null });
+// Set up EJS as the view engine
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'ejs');
+
+// Example route for rendering a view
+app.get('/', (req, res) => {
+  res.render('index', { weather: null, error: null });
 });
 
 // Handle the /weather route
